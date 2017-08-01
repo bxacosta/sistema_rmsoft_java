@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head th:fragment="head">
+
+        <title th:text="${dat_sistema.inicialesEmpresa + ' | '} + ${titulo_pagina}">RMSoft</title>
+
+        <!-- Required meta tags -->
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0, minimum-scale=1.0"/>
+
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="../static/images/favicon.ico" th:href="@{/images/favicon.ico}"/>
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}"/>
+        <!-- Font Awesome CSS -->
+        <link rel="stylesheet" href="../static/css/font-awesome.css" th:href="@{/css/font-awesome.css}"/>
+        <!-- Font OWL carousel CSS -->
+        <link rel="stylesheet" href="../static/css/owl.carousel.min.css" th:href="@{/css/owl.carousel.min.css}"/>
+        <link rel="stylesheet" href="../static/css/owl.theme.default.min.css" th:href="@{/css/owl.theme.default.min.css}"/>
+        <!-- Estilos personalizados CSS -->
+        <link rel="stylesheet" href="../static/css/rmsoft.css" th:href="@{/css/rmsoft.css}"/>
+
+    </head>
+<body>
+    
+    <a class="navbar-brand" href="index.html" th:href="@{/}" th:fragment="navbar-link-index">
+        <div class="marca">
+            <img class="logo" src="../static/images/logo.svg" alt="Logo" th:src="@{/images/logo.svg}"/>
+            <span class="texto hidden-xs-down" th:text="${dat_sistema.nombreEmpresa}">Nombre</span>
+        </div>
+    </a>
+    
+    <a href="login.html" class="btn boton-ol-principal" th:href="@{/login}" th:fragment="navbar-btn-login">Iniciar sesión</a>
+    
+    <a href="registro.html" class="btn boton-principal boton-lg" th:href="@{/registro}" th:fragment="principal-btn-registro">Crear cuenta</a>
+    
+    
+    <a href="index.html" th:href="@{/}" th:fragment="panel-img-logo">
+        <img src="../static/images/logo.svg" alt="Logo" th:src="@{/images/logo.svg}"/>
+    </a>
+    
+    <div class="opciones" th:fragment="panel-div-opciones">
+        <a class="login-link" href="login.html" th:href="@{/login}" th:classappend="${active_login}? active"><i class="fa fa-id-card-o" aria-hidden="true"></i> Iniciar sesión</a>
+        <a class="register-link" href="registro.html" th:href="@{/registro}" th:classappend="${active_registro}? active"><i class="fa fa-user-plus" aria-hidden="true"></i> Crear Cuenta</a>
+    </div>
+
+    <footer class="text-center" id="pie" role='contentinfo' th:fragment="footer">
+        <div class="container">
+            <p><strong><a href="https://github.com/bxacosta" class="link-primario" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> RMSoft</a></strong> © 2017 | Desarrollo de aplicaciones Web.</p>
+        </div>
+    </footer>
+</body>
+</html>

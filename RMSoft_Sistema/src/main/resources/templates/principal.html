@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head th:replace="partes/pagina_sistema :: head"></head>
+<body>
+    <div class="container-sistema">
+        <div th:replace="partes/pagina_sistema :: sidebar"></div>
+        <div class="principal">
+            <nav th:replace="partes/pagina_sistema :: navbar"></nav>
+            <div class="contenido container-fluid">
+                <div class="alertas">
+                    <div class="alert alert-info fade show" role="alert" th:if="${agregada == 1}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>INFO: </strong>Se ha agregado una habitacion a tu orden de reserva.
+                    </div>
+                    <div class="alert alert-info fade show" role="alert" th:if="${agregada == 2}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>INFO: </strong>La habitacion seleccionada ya ha sido agregada.
+                    </div>
+                    <div class="alert alert-danger fade show" role="alert" th:if="${incompleto}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>AVISO: </strong>Debe llenar todos sus datos en el apartado de Mi cuenta para poder realizar una reservación.
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="titulo">
+                        <h3>Habitaciones</h3>
+                    </div>
+                    <div class="cuerpo">
+                        <!-- Cards Habitaciones-->
+                        <div class="contenedor-cards" th:if="${existe}">
+                            <div class="card" th:each="habitacion : ${listHabitaciones}">
+                                <div class="card-imagen">
+                                    <a th:if="${usuario.rol} == ${rol.user}" th:href="@{${'/images/sistem/rooms/' + habitacion.imagen}}" class="hidden-md-down" data-fancybox="">
+                                        <img class="card-img-top" alt="habitacion" th:src="@{${'/images/sistem/rooms/' + habitacion.imagen}}"/>
+                                    </a>
+                                    <a th:if="${usuario.rol} == ${rol.user}" th:href="@{${'/images/sistem/rooms/' + habitacion.imagen}}" class="btn-ver-imagen btn btn-secondary btn-block hidden-lg-up" data-fancybox="">
+                                        Ver Imagen
+                                        <i class="fa fa-picture-o" aria-hidden="true"></i>
+                                    </a>
+                                    <a th:if="${usuario.rol} != ${rol.user}"  th:href="@{${'/images/sistem/rooms/' + habitacion.imagen}}" class="btn-ver-imagen btn btn-secondary btn-block" data-fancybox="">
+                                        Ver Imagen
+                                        <i class="fa fa-picture-o" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                                <div class="card-block">
+                                    <div class="card-head">
+                                        <div class="card-title">
+                                            <h4 class="numero"><span class="text-capitalize" th:text="${habitacion.numero}">numero</span></h4>
+                                            
+                                            <a th:if="(${usuario.rol == rol.admin} or ${usuario.rol == rol.resep})" class="link-primario" th:attr="href='#edit-form' + ${habitacion.id}"  data-toggle="collapse" >
+                                                <h6>
+                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                    <span class="text-capitalize" th:text="${habitacion.estado}">estado</span>
+                                                </h6> 
+                                            </a>
+                                            
+                                            <a th:if="${usuario.rol == rol.user}" class="link-primario">
+                                                <h6>
+                                                    <span class="text-capitalize" th:text="${habitacion.estado}">estado</span>
+                                                </h6> 
+                                            </a>
+                                            
+                                            <h5 class="tipo text-capitalize" th:text="${habitacion.tipo}">tipo</h5>
+                                        </div>
+                                        
+                                        <div th:if="(${usuario.rol == rol.admin} or ${usuario.rol == rol.resep})" class="collapse"  th:id="'edit-form' + ${habitacion.id}">
+                                            
+                                            <form class="edit-estado" enctype="multipart/form-data" th:action="@{/principal/editarestado}" th:object="${habModel}" method="POST">
+                                                <input type="hidden" name="idHabitacion" th:value="${habitacion.id}"/>
+                                                       
+                                                <a class="btn-cancelar btn btn-danger" th:href="@{/principal}"><i class="fa fa-times" aria-hidden="true"></i></a>
+                                                <button type="submit" class="btn-guardar btn btn-primary"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                                                
+                                                <select class="selector form-control text-capitalize" th:field="*{estado}" th:remove="all-but-first">
+                                                    <option class="text-capitalize" th:each="est : ${estados}" th:value="${est}" th:text="${est}">Documento</option>
+                                                </select>
+                                            </form>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="info">
+                                        <div class="info-text">
+                                            <div class="capacidad">
+                                                Capacidad:<span th:text="${habitacion.capacidad}"></span>
+                                            </div>
+                                            <div class="ubicacion">
+                                                Ubicación:<span class="text-capitalize" th:text="${habitacion.ubicacion}"></span>
+                                            </div>
+                                            <a th:attr="href='#desc_room' + ${habitacion.id}"  class="mas link-primario" data-toggle="collapse"  aria-expanded="false">
+                                                <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                        <div class="collapse" th:id="'desc_room' + ${habitacion.id}">
+                                            <textarea th:text="${habitacion.descripccion}" class="form-control ta-readonly" rows="3" readonly=""></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="ver-reservaciones">
+                                        <a class="btn-ver-reservaciones btn boton-ol-principal btn-block" data-toggle="modal" th:attr="data-target='#modal_reserva' + ${habitacion.id}">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>Ver Reservaciones
+                                        </a>
+                                    </div>
+                                    <!-- <div class="fecha-reserva">
+                                        <div class="entrada">Fecha Arribo: 
+                                            <p class="fecha">12/09/2017 12:43<span class="zona">GTM-5</span></p>
+                                        </div>
+                                        <div class="salida">Fecha Salida: 
+                                            <p class="fecha">16/09/2017 12:43<span class="zona">GTM-5</span></p>
+                                        </div>
+                                    </div> -->
+                                    <div class="costos" th:if="${habitacion.precioDia != null} or ${habitacion.precioHora != null}">
+                                        <p>Costo Por:</p>
+                                        <div class="reserva">
+                                            <div class="precio" th:if="${habitacion.precioDia != null}">
+                                                <span class="cobro btn">Día $</span>
+                                                <span class="valor btn" th:text="${habitacion.precioDia}"></span>
+                                            </div>
+                                            <div class="precio" th:if="${habitacion.precioHora != null}">
+                                                <span class="cobro btn">Hora $</span>
+                                                <span class="valor btn" th:text="${habitacion.precioHora}"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-pie" th:if="${habitacion.precioDia != null} or ${habitacion.precioHora != null}">
+                                    <a th:if="${usuario.rol} == ${rol.user}" th:href="@{/orden/agregarroom(idHabitacion=${habitacion.id},idUsuario=${usuario.id})}" class="btn boton-principal btn-block">
+                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                        Agregar a la orden de reserva
+                                    </a>
+                                    <a th:if="${usuario.rol} == ${rol.admin} or ${usuario.rol} == ${rol.resep}" th:href="@{/orden/agregarroom(idHabitacion=${habitacion.id})}" class="btn boton-principal btn-block">
+                                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                        Agregar a la orden de reserva
+                                    </a>
+                                </div>
+                                
+                                <div class="modal fade"  th:id="'modal_reserva' + ${habitacion.id}" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog modal-slg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Reservaciones de la Habitación: <span th:text="${habitacion.numero}"></span></h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nº</th>
+                                                            <th>Fecha</th>
+                                                            <th th:if="(${usuario.rol} == ${rol.admin} or ${usuario.rol} == ${rol.resep})">Cliente</th>
+                                                            <th>Arribo</th>
+                                                            <th>Salida</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th>Nº</th>
+                                                            <th>Fecha</th>
+                                                            <th th:if="(${usuario.rol} == ${rol.admin} or ${usuario.rol} == ${rol.resep})">Cliente</th>
+                                                            <th>Arribo</th>
+                                                            <th>Salida</th>
+                                                        </tr>
+                                                    </tfoot>
+                                                    <tbody>
+                                                        <tr th:each="reserva : ${habitacion.reservaciones}">
+                                                            <td th:text="${reserva.id}"></td>
+                                                            <td th:text="${reserva.fecha}"></td>
+                                                            <td th:if="(${usuario.rol} == ${rol.admin} or ${usuario.rol} == ${rol.resep})"><span class="text-capitalize" th:text="${reserva.usuario.apellido}"></span> <span class="text-capitalize" th:text="${reserva.usuario.nombre}"></span></td>
+                                                            <td th:text="${reserva.fechaArribo}"></td>
+                                                            <td th:text="${reserva.fechaSalida}"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- Fin Card -->
+
+                        </div><!-- Fin Contenedor Cards -->
+                    </div>
+                </div>
+            </div><!-- Fin .contenido -->
+        </div>
+    </div><!-- Fin .container-sistema -->
+
+    <!-- jQuery first, then Bootstrap JS. -->
+    <script th:replace="partes/script :: jquery"></script>
+    <script th:replace="partes/script :: bootstrap"></script>
+    <script th:replace="partes/script :: fancybox"></script>
+    <script th:replace="partes/script :: datatables"></script>
+    <script th:replace="partes/script :: datatablesbs4"></script>
+    <script th:replace="partes/script :: principal-script"></script>
+    <script th:replace="partes/script :: cerrar-alerts"></script>
+</body>
+</html>

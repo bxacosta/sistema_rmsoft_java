@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head th:replace="partes/pagina_sistema :: head"></head>
+<body>
+    <div class="container-sistema">
+        <div th:replace="partes/pagina_sistema :: sidebar"></div>
+        <div class="principal">
+            <nav th:replace="partes/pagina_sistema :: navbar"></nav>
+            <div class="contenido orden container-fluid">
+                <div class="alertas">
+                    <div class="alert alert-warning fade show" role="alert" th:if="${error == 1}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>AVISO: </strong>Debe ingresar la fecha de arribo y de salida para realizar el calculo.
+                    </div>
+                    <div class="alert alert-danger fade show" role="alert" th:if="${error == 2}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>ERROR: </strong>No se pudo procesar el calculo de su orde verifique que las fechas sean correctas.
+                    </div>
+                    <div class="alert alert-danger fade show" role="alert" th:if="${error == 3}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>ERROR: </strong> Debe Seleccionar un usuario para hacer la reserva.
+                    </div>
+                    <div class="alert alert-danger fade show" role="alert" th:if="${error == 4}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>ERROR: </strong>Seleccione alguna de las habitaciones diponibles para poder realizar su orden.
+                    </div>
+                    <div class="alert alert-warning fade show" role="alert" th:if="${error == 5}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>AVISO: </strong>Alguna de las habitaciones seleccionadas estan ocupadas en este momento.
+                    </div>
+                </div>
+                <div class="panel" th:if="${hayusuario == false and usuario.rol != rol.user}">
+                    <div class="titulo">
+                    <h3>Seleccione el Usuario</h3>
+                    </div>
+                    <div class="cuerpo">
+                        <table id="tabla-clientes" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr >
+                                <th>Nº Documento</th>
+                                <th>Apellido</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Nº Documento</th>
+                                <th>Apellido</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Acción</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr th:if="${usuario.rol == rol.admin}"  th:each="usu : ${listallusuarios}">
+                                <td th:text="${usu.numDocumento}"></td>
+                                <td th:text="${usu.apellido}"></td>
+                                <td th:text="${usu.nombre}"></td>
+                                <td th:text="${usu.usuario}"></td>
+                                <td th:text="${usu.rol}"></td>
+                                <td>
+                                    <div class="tab-col-botones">
+                                        <a th:href="@{/orden/agregarcliente(idUsuario=${usu.id})}" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Seleccionar</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr  th:if="${usuario.rol == rol.resep}" th:each="usu : ${listusuarios}">
+                                <td th:text="${usu.numDocumento}"></td>
+                                <td th:text="${usu.apellido}"></td>
+                                <td th:text="${usu.nombre}"></td>
+                                <td th:text="${usu.usuario}"></td>
+                                <td th:text="${usu.rol}"></td>
+                                <td>
+                                    <div class="tab-col-botones">
+                                        <a class="btn btn-success" th:href="@{/orden/agregarcliente(idUsuario=${usu.id})}"><i class="fa fa-check" aria-hidden="true"></i> Seleccionar</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="titulo">
+                        <h3>Detalle de reserva</h3>
+                        <div class="opciones">
+                            <button class="btn btn-success"  data-toggle="modal" data-target="#modal-confirmar-reserva"><i class="fa fa-check" aria-hidden="true"></i><span class="hidden-xs-down"> Aceptar</span></button>
+                            <a th:href="@{/orden/cancelar}" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i><span class="hidden-xs-down"> Cancelar</span></a>
+                        </div>
+                    </div>
+                    <div class="cuerpo">
+                        <div class="detalle-orden">
+                            <div class="cabeza-orden">
+                                <h5>Fecha: <span th:text="${reservaModel.fecha}"></span></h5>                             
+                                <div class="datos-cliente">
+                                    <h5>Cliente:
+                                        <span th:text="${usuarioReserva.apellido}">Apellido</span>
+                                        <span th:text="${usuarioReserva.nombre}">Nombre</span>
+                                    </h5>
+                                </div>
+                                <h5>Documento: <span th:text="${usuarioReserva.numDocumento}">17234235423</span></h5>
+                            </div>
+                            <form th:action="@{/orden/calcular}" th:object="${reservaModel}" method="POST">
+                                <input type="hidden" th:field="*{estado}"/>
+                                <input type="hidden" th:field="*{fecha}"/>
+                               <div class="info-orden">
+                                <h5>
+                                    <span class="etiqueta-orden-cabeza">Reservar Por:</span>
+                                    <span class="input-orden-cabeza">
+                                        <select class="form-control text-capitalize" th:field="*{modo}">
+                                            <option class="text-capitalize" th:value="dia">Dia</option>
+                                            <option class="text-capitalize" th:value="hora">Hora</option>
+                                        </select>
+                                    </span>
+                                </h5>
+                                <h5>
+                                    <span class="etiqueta-orden-cabeza">Fecha Arribo:</span>
+                                    <span class="input-orden-cabeza">
+                                        <input th:field="*{fechaArribo}" class="form-control input-fehca" type="datetime-local"/>
+                                    </span>
+                                </h5>
+                                <h5>
+                                    <span class="etiqueta-orden-cabeza">Fecha Salida:</span>
+                                    <span class="input-orden-cabeza">
+                                        <input th:field="*{fechaSalida}" class="form-control input-fehca" type="datetime-local"/>
+                                    </span>
+                                </h5>
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-calculator" aria-hidden="true"></i> Calcular</button>
+                            </div>
+                        </form>
+                    </div>
+                    <table class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                                <tr>
+                                    <th>Nº</th>
+                                    <th>Tipo</th>
+                                    <th>Capacidad</th>
+                                    <th>Ubicación</th>
+                                    <th>Estado</th>
+                                    <th>Costo</th>
+                                    <th>Sub. Total</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Nº</th>
+                                    <th>Tipo</th>
+                                    <th>Capacidad</th>
+                                    <th>Ubicación</th>
+                                    <th>Estado</th>
+                                    <th>Costo</th>
+                                    <th>Sub. Total</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <tr th:each="datr : ${listDetReserva}">
+                                    <td class="text-capitalize" th:text="${datr.habitacion.numero}"></td>
+                                    <td class="text-capitalize" th:text="${datr.habitacion.tipo}"></td>
+                                    <td th:text="${datr.habitacion.capacidad}"></td>
+                                    <td class="text-capitalize" th:text="${datr.habitacion.ubicacion}"></td>
+                                    <td class="text-capitalize" th:text="${datr.habitacion.estado}"></td>
+                                    <td>
+                                        <div class="tab-col-costo">
+                                            <span th:if="${datr.habitacion.precioDia != null}">Día $<span th:text="${datr.habitacion.precioDia}"></span></span>
+                                            <span th:if="${datr.habitacion.precioHora != null}"> Hora $<span th:text="${datr.habitacion.precioHora}"></span></span>
+                                        </div>
+                                    </td>
+                                    <td><span>$</span><span th:text="${datr.subTotalHabitacion}"></span></td>
+                                    <td>
+                                        <div class="tab-col-botones">
+                                            <a class="btn btn-primary" th:href="@{/orden/borrar?idl=__${datr.habitacion.id}__}"><i class="fa fa-eraser" aria-hidden="true"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pie-orden">
+                            <h5>Sub. Total: $ <span th:text="${reservaModel.subTotal}"></span></h5>
+                            <h5>Descuento %: <span th:text="${reservaModel.valorDescuento}"></span></h5>
+                            <h5>TOTAL: $ <span th:text="${reservaModel.total}"></span></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="modal-confirmar-reserva" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Confirmar Reserva</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form th:action="@{/orden/crearreserva}" th:object="${reservaModel}" method="POST">
+                                <div class="modal-body">
+                                    <div class="confirmar-reserva">
+                                        <h5 class="col-12 col-lg-10">Nº de Habitaciones:<span th:text="${numHabitaciones}"></span></h5>
+                                        <h5 class="col-12 col-lg-10">Valor total a pagar: $<span th:text="${reservaModel.total}"></span></h5>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#" class="btn btn-secondary" data-dismiss="modal">Cerrar</a>
+                                    <button type="submit" class="btn btn-success">Confirmar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div><!-- Fin Modal -->
+            </div><!-- Fin .contenido -->
+        </div>
+    </div><!-- Fin .container-sistema -->
+
+    <!-- jQuery first, then Bootstrap JS. -->
+    <script th:replace="partes/script :: jquery"></script>
+    <script th:replace="partes/script :: bootstrap"></script>
+    <script th:replace="partes/script :: datatables"></script>
+    <script th:replace="partes/script :: datatablesbs4"></script>
+    <script th:replace="partes/script :: cerrar-alerts"></script>
+    <script th:replace="partes/script :: init-datatable"></script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head th:replace="partes/pagina_sistema :: head"></head>
+<body>
+    <div class="container-sistema">
+        <div th:replace="partes/pagina_sistema :: sidebar"></div>
+        <div class="principal">
+            <nav th:replace="partes/pagina_sistema :: navbar"></nav>
+            <div class="contenido orden container-fluid">
+                <div class="alertas">
+                    <div class="alert alert-danger fade show" role="alert" th:if="${error == 1}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>ERROR: </strong>Los datos que desea ingresar estan incorrecotos.
+                    </div>
+                    <div class="alert alert-info fade show" role="alert" th:if="${editado}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>INFO: </strong>Sus datos se han actualizado correctamente, epera mientras se actualizan.
+                    </div>
+                </div>
+                <div class="panel" th:if="${accion == 0 or accion == 1}">
+                    <form th:action="@{/configuracion/editardescuento}" th:object="${descuentomodel}" method="POST">
+                        <input type="hidden" th:field="*{id}"/>
+                        <div class="titulo">
+                            <h3>Descuento</h3>
+                            <div class="opciones">
+                                <a class="btn btn-primary" href="#" role="button" th:href="@{/configuracion/editdescuento}" th:if="${accion == 0}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i><span class="hidden-xs-down"> Editar</span></a>
+                                <button type="submit" class="btn btn-success" th:if="${accion == 1}"><i class="fa fa-floppy-o" aria-hidden="true"></i><span class="hidden-xs-down"> Guardar</span></button>
+                                <a class="btn btn-danger" href="#" role="button" th:href="@{/configuracion/cancelar}" th:if="${accion == 1}"><i class="fa fa-times" aria-hidden="true"></i><span class="hidden-xs-down"> Cancelar</span></a>
+                            </div>
+                        </div>
+                        <div class="cuerpo">
+                            <div class="datos-habitacion row">
+                                <div class="col-12">
+                                    <div class="form-group row">
+                                        <label for="nombre" class="col-md-2 col-form-label hidden-sm-down">Estado:</label>
+                                        <div class="col-6 col-md-4">
+                                            <input type="text" class="form-control text-capitalize" readonly="" th:if="${accion == 0}" th:field="*{estado}"/>
+                                            <select th:if="${accion == 1}" class="form-control text-capitalize" th:field="*{estado}">
+                                                <option class="text-capitalize" th:value="activar">Activar</option>
+                                                <option class="text-capitalize" th:value="desactivar">Desactivar</option>
+                                            </select>
+                                        </div>
+                                        <label class="col-md-2 col-form-label hidden-sm-down">Porcentaje %:</label>
+                                        <div class="col-6 col-md-4">
+                                            <input type="number" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{procentaje}"/>
+                                            <input type="number" class="form-control" th:if="${accion == 1}" th:field="*{procentaje}"/>
+                                        </div> 
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-2 col-form-label hidden-sm-down">Nombre:</label>
+                                        <div class="col-12 col-md-10">
+                                            <input type="text" class="form-control text-capitalize" readonly="" th:if="${accion == 0}" th:field="*{nombre}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 1}" th:field="*{nombre}"/>
+                                        </div> 
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="nombre" class="col-md-2 col-form-label hidden-sm-down">Condición:</label>
+                                        <div class="col-6 col-md-4">
+                                            <input type="text" class="form-control text-capitalize" readonly="" th:if="${accion == 0}" th:field="*{condicion}"/>
+                                            <select th:if="${accion == 1}" class="form-control text-capitalize" th:field="*{condicion}">
+                                                <option class="text-capitalize" th:value="todos">Todos</option>
+                                                <option class="text-capitalize" th:value="mayor">Valor de orden mayor a</option>
+                                                <option class="text-capitalize" th:value="menor">Valor de orden igual a</option>
+                                            </select>
+                                        </div>
+                                        <label class="col-md-2 col-form-label hidden-sm-down">Valor $:</label>
+                                        <div class="col-6 col-md-4">
+                                            <input type="text" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{valorCondicion}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 1}" th:field="*{valorCondicion}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-2 col-form-label">Desde:</label>
+                                        <div class="col-12 col-md-4">
+                                            <input type="text" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{fechaInicio}"/>
+                                            <input type="date" class="form-control" th:if="${accion == 1}" th:field="*{fechaInicio}"/>
+                                        </div>
+                                        <label class="col-md-2 col-form-label">Hasta:</label>
+                                        <div class="col-12 col-md-4">
+                                            <input type="text" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{fechaFin}"/>
+                                            <input type="date" class="form-control" th:if="${accion == 1}" th:field="*{fechaFin}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </form>
+                </div>
+                <div class="panel" th:if="${accion == 0 or accion == 2}">
+                    <form th:action="@{/configuracion/editarempresa}" th:object="${empresaModel}" method="POST">
+                        <input type="hidden" th:field="*{id}"/>
+                        <div class="titulo">
+                            <h3>Datos Empresa</h3>
+                            <div class="opciones">
+                                <a class="btn btn-primary" href="#" role="button" th:href="@{/configuracion/editempresa}" th:if="${accion == 0}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i><span class="hidden-xs-down"> Editar</span></a>
+                                <button type="submit" class="btn btn-success" th:if="${accion == 2}"><i class="fa fa-floppy-o" aria-hidden="true"></i><span class="hidden-xs-down"> Guardar</span></button>
+                                <a class="btn btn-danger" href="#" role="button" th:href="@{/configuracion/cancelar}" th:if="${accion == 2}"><i class="fa fa-times" aria-hidden="true"></i><span class="hidden-xs-down"> Cancelar</span></a>
+                            </div>
+                        </div>
+                        <div class="cuerpo">
+                            <div class="datos-habitacion row">
+                                <div class="col-12">
+                                    <div class="form-group row">
+                                        <label for="nombre" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Nombre:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control text-capitalize" readonly="" th:if="${accion == 0}" th:field="*{nombre}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 2}" th:field="*{nombre}"/>
+                                        </div>
+                                        <label for="denominacion" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Denominación:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control text-capitalize" readonly="" th:if="${accion == 0}" th:field="*{denominacion}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 2}" th:field="*{denominacion}"/>
+                                        </div> 
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="telefono" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Telefono:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{telefono}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 2}" th:field="*{telefono}"/>
+                                        </div>
+                                        <label for="celular" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Celular:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{celular}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 2}" th:field="*{celular}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="pais" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">País:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control text-capitalize" readonly="" th:if="${accion == 0}" th:field="*{pais}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 2}" th:field="*{pais}"/>
+                                        </div>
+                                        <label for="ciudad" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Ciudad:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control text-capitalize" readonly="" th:if="${accion == 0}" th:field="*{ciudad}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 2}" th:field="*{ciudad}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="email" class="col-12 col-md-3 col-xl-2 col-form-label hidden-sm-down">Email:</label>
+                                        <div class="col-12 col-md-9 col-xl-10">
+                                            <input type="email" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{email}"/>
+                                            <input type="email" class="form-control" th:if="${accion == 2}" th:field="*{email}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="direccion" class="col-12 col-md-3 col-xl-2 col-form-label hidden-sm-down">Dirección:</label>
+                                        <div class="col-12 col-md-9 col-xl-10">
+                                            <input type="text" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{direccion}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 2}" th:field="*{direccion}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="descripcion" class="col-12 col-md-3 col-xl-2 col-form-label hidden-sm-down">Introducción:</label>
+                                        <div class="col-12 col-md-9 col-xl-10">
+                                            <textarea class="form-control" rows="2" readonly="" th:if="${accion == 0}" th:field="*{introduccion}"></textarea>
+                                            <textarea class="form-control" rows="2" th:if="${accion == 2}" th:field="*{introduccion}"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="pais" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Título Servicios:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{tituloServicio}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 2}" th:field="*{tituloServicio}"/>
+                                        </div>
+                                        <label for="ciudad" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Título Contacto:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{tituloContacto}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 2}" th:field="*{tituloContacto}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="descripcion" class="col-12 col-md-3 col-xl-2 col-form-label hidden-sm-down">Detalle Servicio:</label>
+                                        <div class="col-12 col-md-9 col-xl-10">
+                                            <textarea class="form-control" rows="4" readonly="" th:if="${accion == 0}" th:field="*{detalleServicio}"></textarea>
+                                            <textarea class="form-control" rows="4" th:if="${accion == 2}" th:field="*{detalleServicio}"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="mapa" class="col-12 col-md-3 col-xl-2 col-form-label hidden-sm-down">Mapa (URL):</label>
+                                        <div class="col-12 col-md-9 col-xl-10">
+                                            <textarea class="form-control" rows="3" readonly="" th:if="${accion == 0}" th:field="*{mapa}"></textarea>
+                                            <textarea class="form-control" rows="3" th:if="${accion == 2}" th:field="*{mapa}"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </form>
+                </div>
+            </div><!-- Fin .contenido -->
+        </div>
+    </div><!-- Fin .container-sistema -->
+
+    <!-- jQuery first, then Bootstrap JS. -->
+    <script th:replace="partes/script :: jquery"></script>
+    <script th:replace="partes/script :: bootstrap"></script>
+    <script th:replace="partes/script :: cerrar-alerts"></script>
+</body>
+</html>

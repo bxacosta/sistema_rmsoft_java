@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head th:fragment="head">
+    
+    <title th:text="${dat_sistema.inicialesEmpresa + ' | '} + ${titulo_pagina}">RMSoft</title>
+
+    <!-- Required meta tags -->
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0, minimum-scale=1.0"/>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="../static/images/favicon.ico" th:href="@{/images/favicon.ico}"/>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}"/>
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="../static/css/font-awesome.css" th:href="@{/css/font-awesome.css}"/>
+    <!-- Fancy Box CSS -->
+    <link rel="stylesheet" href="../static/css/jquery.fancybox.min.css" th:href="@{/css/jquery.fancybox.min.css}"/>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="../static/css/dataTables.bootstrap4.min.css" th:href="@{/css/dataTables.bootstrap4.min.css}"/>
+    <!-- Estilos personalizados CSS -->
+    <link rel="stylesheet" href="../static/css/rmsoft.css" th:href="@{/css/rmsoft.css}"/>
+
+</head>
+<body>
+    <div class="container-sistema">
+        <div class="background-sidebar hidden-sm-down" th:fragment="sidebar">
+            <nav class="sidebar" role="navigation">
+                <a class="marca" th:href="@{/principal}">
+                    <img class="logo" src="../static/images/logo.svg" alt="Logo" th:src="@{/images/logo.svg}"/>
+                    <span class="texto hidden-xs-down" th:text="${dat_sistema.nombreEmpresa}">Nombre</span>
+                </a>
+                <div class="usuario">
+                    <a href="#" th:href="@{/cuenta}">
+                        <img src="../static/images/default-user.jpg" class="foto-usuario rounded-circle hidden-md-down" alt="Usuario" th:src="@{${'/images/sistem/users/' + usuario.imagen}}"/>
+                    </a>
+                    <div class="texto">
+                        <a href="#" class="nombre" th:href="@{/cuenta}"><span th:text="${usuario.apellido}">Apellido</span> <span th:text="${usuario.nombre}">Nombre</span></a>
+                        <span class="rol" th:text="${usuario.rol}">Administrador</span>
+                    </div>
+                </div>
+                <div class="menu-sidebar">
+                    <ul class="nav flex-column">
+                        <li class="" th:classappend="${active_principal}? active">
+                            <a href="principal.html" th:href="@{/principal}">Principal</a>
+                        </li>
+                        <li class="" th:classappend="${active_orden}? active">
+                            <a href="orden.html" th:href="@{/orden}">Orden de Reserva</a>
+                        </li>
+                        <li class="" th:classappend="${active_reservacion}? active">
+                            <a href="reservacion.html" th:href="@{/reservacion}">Reservaciones</a>
+                        </li>
+                        <li class="" th:classappend="${active_habitacion}? active" th:if="(${usuario.rol} == ${rol.admin} or ${usuario.rol} == ${rol.resep})">
+                            <a href="habitacion.html" th:href="@{/habitacion}">Habitaciones</a>
+                        </li>
+                        <li class="" th:classappend="${active_usuario}? active" th:if="(${usuario.rol} == ${rol.admin} or ${usuario.rol} == ${rol.resep})">
+                            <a href="usuario.html" th:href="@{/usuario}">Usuarios</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div class="principal">
+            <nav class="navbar" th:fragment="navbar">
+                <div class="container-fluid">
+                    <button type="button" class="boton-menu hidden-md-up" data-toggle="collapse" data-target="#menu-mobil" aria-expanded="false">
+                        <i class="fa fa-bars" aria-hidden="true"></i>
+                    </button>
+                    <h2 class="titulo" th:text="${titulo_pagina}">Pagina</h2>
+                    <div class="menu">
+                        <ul class="">
+                            <li class="" th:if="${usuario.rol} == ${rol.admin}" th:classappend="${active_configuracion}? active">
+                                <a href="configuracion.html" class="menu-item"  th:href="@{/configuracion}"><i class="fa fa-wrench" aria-hidden="true"></i><span class="hidden-xs-down"> Configuración</span></a>
+                            </li>
+                            <li class="" th:classappend="${active_cuenta}? active">
+                                <a href="cuenta.html" class="menu-item" th:href="@{/cuenta}"><i class="fa fa-user" aria-hidden="true"></i><span class="hidden-xs-down"> Mi Cuenta</span></a>
+                            </li>
+                            <li class="">
+                                <form th:action="@{/salir}" method="POST">
+                                    <button class="menu-item" type="submit"><i class="fa fa-sign-out" aria-hidden="true"></i><span class="hidden-xs-down"> Cerrar Sesión</span></button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="collapse hidden-md-up" id="menu-mobil">
+                    <ul class="nav flex-column">
+                        <li class="" th:classappend="${active_principal}? active">
+                            <a href="principal.html" th:href="@{/principal}">Principal</a>
+                        </li>
+                        <li class="" th:classappend="${active_orden}? active">
+                            <a href="orden.html" th:href="@{/orden}">Orden de Reserva</a>
+                        </li>
+                        <li class="" th:classappend="${active_reservacion}? active">
+                            <a href="reservacion.html" th:href="@{/reservacion}">Reservaciones</a>
+                        </li>
+                        <li class="" th:classappend="${active_habitacion}? active" th:if="(${usuario.rol} == ${rol.admin} or ${usuario.rol} == ${rol.resep})">
+                            <a href="habitacion.html" th:href="@{/habitacion}">Habitaciones</a>
+                        </li>
+                        <li class="" th:classappend="${active_usuario}? active" th:if="(${usuario.rol} == ${rol.admin} or ${usuario.rol} == ${rol.resep})">
+                            <a href="usuario.html" th:href="@{/usuario}">Usuarios</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div><!-- Fin .container-sistema -->  
+    
+</body>
+</html>

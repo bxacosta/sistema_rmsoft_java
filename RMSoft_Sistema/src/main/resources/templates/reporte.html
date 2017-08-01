@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head th:replace="partes/pagina_sistema :: head"></head>
+<body>
+    <div class="container-reporte">
+        <div class="cabeza-reporte">
+            <div class="datos-empresa">
+                <span class="texto"><span>Hotel</span><span>Libertad</span></span>
+                <img class="logo" th:src="@{/images/logo.svg}" alt="Logo"/>
+            </div>
+            <div class="datos-orden">
+                <h5>Orden Nº: <span th:text="${reservacion.id}"></span></h5>                             
+                <h5>Fecha:<span th:text="${reservacion.fecha}"></span></h5>
+            </div>
+            <div class="datos-orden">
+                <h5>Cliente: <span th:text="${reservacion.usuario.apellido}"></span><span th:text="${reservacion.usuario.nombre}"></span></h5>
+                <h5>
+                    Email:
+                    <span th:text="${reservacion.usuario.usuario}"></span>
+                </h5>
+                <h5>Documento:<span th:text="${reservacion.usuario.numDocumento}"></span></h5>
+            </div>
+        </div>
+        <div class="cuerpo-reporte">
+            <h5>Detalle de la reserva</h5>
+            <table class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Nº</th>
+                        <th>Tipo</th>
+                        <th>Capacidad</th>
+                        <th>Ubicación</th>
+                        <th>Descripcción</th>
+                        <th>Costo</th>
+                        <th>Sub. Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="detres : ${reservacion.detReserva}">
+                        <td class="text-capitalize" th:text="${detres.habitacion.numero}"></td>
+                        <td class="text-capitalize" th:text="${detres.habitacion.tipo}"></td>
+                        <td th:text="${detres.habitacion.capacidad}"></td>
+                        <td class="text-capitalize" th:text="${detres.habitacion.ubicacion}"></td>
+                        <td class="td-des" th:text="${detres.habitacion.descripccion}">
+                            <textarea class="form-control ta-readonly" rows="3" readonly="" ></textarea>
+                        </td>
+                        <td><span>$</span><span th:text="${detres.precioHabitacion}"></span></td>
+                        <td><span>$</span><span th:text="${detres.subTotalHabitacion}"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="fin-reporte">
+            <div class="datos-orden">
+                <h5>Sub. Total: $<span th:text="${reservacion.subTotal}"></span></h5>
+                <h5>Descuento: %<span th:text="${reservacion.valorDescuento}"></span></h5>
+                <h5>TOTAL: $<span th:text="${reservacion.total}"></span></h5>
+            </div>
+            <div class="pie-reporte">
+                <div class="datos-pie-reporte">
+                    <span>Email: <span th:text="${reservacion.empresa.email}"></span></span>
+                    <span>Telefono: <span th:text="${reservacion.empresa.telefono}"></span><span>/</span><span th:text="${reservacion.empresa.celular}"></span></span>
+                </div>
+                <div class="datos-pie-reporte">
+                    <span>Direccion: <span th:text="${reservacion.empresa.ciudad}"></span>-<span th:text="${reservacion.empresa.pais}"></span><span th:text="${reservacion.empresa.direccion}"></span></span>
+                </div>
+            </div>
+        </div>
+    </div><!-- Fin .container-sistema -->
+</body>
+</html>

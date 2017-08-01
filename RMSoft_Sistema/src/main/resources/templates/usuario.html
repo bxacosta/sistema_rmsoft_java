@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head th:replace="partes/pagina_sistema :: head"></head>
+<body>
+    <div class="container-sistema">
+        <div th:replace="partes/pagina_sistema :: sidebar"></div>
+        <div class="principal">
+            <nav th:replace="partes/pagina_sistema :: navbar"></nav>
+            <div class="contenido orden container-fluid">
+                <div class="alertas">
+                    <div class="alert alert-danger fade show" role="alert" th:if="${error == 1}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>ERROR: </strong>Alguno de los datos que desea ingresar estan incorrectos.
+                    </div>
+                    <div class="alert alert-success fade show" role="alert" th:if="${guardado}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>ÉXITO: </strong>Los datos del usuario se han guardado correctamente.
+                    </div>
+                    <div class="alert alert-danger fade show" role="alert" th:if="${error == 3}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>ERROR: </strong>El email que desea ingresar ya esta registrado por otro usuario.
+                    </div>
+                </div>
+                <div class="panel reservaciones" th:if="${usuarioModel != null}">
+                    <form th:action="@{/usuario/guardarusuario}" th:object="${usuarioModel}" method="POST">
+                        <input th:if="${accion != 2}" type="hidden" th:field="*{id}"/>
+                        <input type="hidden" th:field="*{imagen}"/>
+                        <div class="titulo">
+                            <h3>Datos Usuario</h3>
+                            <div class="opciones" th:if="${accion == 1 or accion == 2}">
+                                <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o" aria-hidden="true"></i><span class="hidden-xs-down"> Guardar</span></button>
+                                <a th:href="@{/usuario/cancelar}" class="btn btn-danger" href="#" role="button"><i class="fa fa-times" aria-hidden="true"></i><span class="hidden-xs-down"> Cancelar</span></a>
+                            </div>
+                        </div>
+                        <div class="cuerpo">
+                            <div class="datos-usuario row">
+                                <div class="col-12 col-md-12 col-lg-7 col-xl-8">
+                                    <div class="form-group row">
+                                        <label for="nombre" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Nombre:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control text-capitalize" readonly="" th:if="${accion == 0}" th:field="*{nombre}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 1 or accion == 2}" th:field="*{nombre}"/>
+                                        </div>
+                                        <label for="apellido" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Apellido:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control text-capitalize" readonly="" th:if="${accion == 0}" th:field="*{apellido}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 1 or accion == 2}" th:field="*{apellido}"/>
+                                        </div> 
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="descripcion" class="col-12 col-md-3 col-xl-2 col-form-label">Dcumento:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control" name="capacidad" readonly="" th:if="${accion == 0}" th:field="*{tipoDocumento}"/>
+                                            <select class="form-control" th:if="${accion == 1 or accion == 2}" th:field="*{tipoDocumento}" th:remove="all-but-first">
+                                                <option th:each="td : ${tpDocumento}" th:value="${td.nombre}" th:text="${td.nombre}">Documento</option>
+                                            </select>
+                                        </div>
+
+                                        <label for="numero" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Número:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control text-capitalize" readonly="" th:if="${accion == 0}" th:field="*{numDocumento}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 1 or accion == 2}" th:field="*{numDocumento}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="email" class="col-12 col-md-3 col-xl-2 col-form-label">Email:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="email" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{usuario}"/>
+                                            <input type="email" class="form-control" th:if="${accion == 1 or accion == 2}" th:field="*{usuario}"/>
+                                        </div>
+
+                                        <label for="email" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Habilitado:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input th:if="${usuarioModel.habilitado == true and accion == 0}" value="Si" type="text" class="form-control text-capitalize" readonly=""/>
+                                            <input th:if="${usuarioModel.habilitado == false and accion == 0}" value="No" type="text" class="form-control text-capitalize" readonly=""/>
+                                            <select class="form-control" th:if="${accion == 1 or accion == 2}" th:field="*{habilitado}">
+                                                <option th:value="${true}">Si</option>
+                                                <option th:value="${false}">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="direccion" class="col-12 col-md-3 col-xl-2 col-form-label hidden-sm-down">Dirección:</label>
+                                        <div class="col-12 col-md-3 col-xl-10">
+                                            <input type="text" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{direccion}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 1 or accion == 2}" th:field="*{direccion}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="role" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Rol:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control text-capitalize" name="capacidad" readonly="" th:if="${accion == 0}" th:field="*{rol}"/>
+                                            <select class="form-control text-capitalize" th:if="${accion == 1 or accion == 2}" th:field="*{rol}" th:remove="all-but-first">
+                                                <option class="text-capitalize" th:each="rol : ${listRol}" th:value="${rol}" th:text="${rol}"></option>
+                                            </select>
+                                        </div>
+                                        <label for="cuenta" class="col-12 col-md-3 col-xl-2 col-form-label">Clave:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="password" class="form-control" name="password" placeholder="Contraseña"/>
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div class="imagen-persona col-12 col-lg-5 col-xl-4 hidden-md-down">
+                                    <a class="link-ver-img" data-fancybox="" th:href="@{${'/images/sistem/users/' + usuarioModel.imagen}}"> 
+                                        <img class="img-fluid img-thumbnail" id="mostrador" alt="usuario" th:src="@{${'/images/sistem/users/' + usuarioModel.imagen}}"/>
+                                    </a>
+                                </div>
+                            </div> 
+                        </div>
+                    </form>
+                </div>
+                <div class="panel reservaciones" th:if="${accion == 0}">
+                    <div class="titulo">
+                        <h3>Usuarios</h3>
+                        <div class="opciones">
+                            <a class="btn btn-primary" th:href="@{/usuario/nuevo}" role="button"><i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-xs-down"> Nuevo</span></a>
+                        </div>
+                    </div>
+                    <div class="cuerpo">
+                        <table class="table table-striped table-bordered" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Documento</th>
+                                    <th>Apellido</th>
+                                    <th>Nombre</th>
+                                    <th>Habilitado</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Documento</th>
+                                    <th>Apellido</th>
+                                    <th>Nombre</th>
+                                    <th>Habilitado</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <tr th:if="${usuario.rol == rol.admin}"  th:each="usu : ${listallusuarios}">
+                                    <td th:text="${usu.id}"></td>
+                                    <td th:text="${usu.numDocumento}"></td>
+                                    <td th:text="${usu.apellido}"></td>
+                                    <td th:text="${usu.nombre}"></td>
+                                    <td>
+                                        <span th:if="${usu.habilitado == true}">Si</span>
+                                        <span th:if="${usu.habilitado == false}">No</span>
+                                    </td>
+                                    <td th:text="${usu.usuario}"></td>
+                                    <td th:text="${usu.rol}"></td>
+                                    <td>
+                                        <div class="tab-col-botones">
+                                            <a class="btn btn-success" th:href="@{/usuario/ver?id=__${usu.id}__}"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                            <a class="btn btn-primary" th:href="@{/usuario/editar?id=__${usu.id}__}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr  th:if="${usuario.rol == rol.resep}" th:each="usu : ${listusuarios}">
+                                    <td th:text="${usu.id}"></td>
+                                    <td th:text="${usu.numDocumento}"></td>
+                                    <td th:text="${usu.apellido}"></td>
+                                    <td th:text="${usu.nombre}"></td>
+                                    <td>
+                                        <span th:if="${usu.habilitado == true}">Si</span>
+                                        <span th:if="${usu.habilitado == false}">No</span>
+                                    </td>
+                                    <td th:text="${usu.usuario}"></td>
+                                    <td th:text="${usu.rol}"></td>
+                                    <td>
+                                        <div class="tab-col-botones">
+                                            <a class="btn btn-success" th:href="@{/usuario/ver?id=__${usu.id}__}"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                            <a class="btn btn-primary" th:href="@{/usuario/editar?id=__${usu.id}__}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!-- Fin .contenido -->
+        </div>
+    </div><!-- Fin .container-sistema -->
+
+    <!-- jQuery first, then Bootstrap JS. -->
+    <script th:replace="partes/script :: jquery"></script>
+    <script th:replace="partes/script :: bootstrap"></script>
+    <script th:replace="partes/script :: datatables"></script>
+    <script th:replace="partes/script :: datatablesbs4"></script>
+    <script th:replace="partes/script :: cerrar-alerts"></script>
+    <script th:replace="partes/script :: init-datatable"></script>
+    <script th:replace="partes/script :: fancybox"></script>
+</body>
+</html>

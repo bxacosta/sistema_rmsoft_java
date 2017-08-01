@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head th:replace="partes/pagina_inicio :: head"></head>
+    <body>
+        <div class="background">
+            <section class="container-inicio" id="inicio">
+                <header class="navbar-inicio">
+                    <nav class="navbar fixed-top navbar-toggleable-sm fixed">
+                        <div class="container">
+                            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#menu-inicio" aria-expanded="false">
+                                <i class="fa fa-bars" aria-hidden="true"></i>
+                            </button>
+                            <a th:replace="partes/pagina_inicio :: navbar-link-index"></a>
+                            <div class="opciones-navbar">
+                                <a th:replace="partes/pagina_inicio :: navbar-btn-login"></a>
+                            </div>
+                            <div class="collapse navbar-collapse" id="menu-inicio">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#inicio">Inicio</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#servicios">Servicios</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#contacto">Contacto</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+                <div class="principal text-center">
+                    <div class="container">
+                        <p class="denominacion text-capitalize" th:text="${empresa.denominacion}">Denominacion</p>
+                        <h1 class="titulo text-capitalize" th:text="${empresa.nombre}">Nombre</h1>
+                        <div class="row justify-content-md-center">
+                            <p class="descripcion col-12 col-md-10" th:text="${empresa.introduccion}">Introduccion</p>
+                        </div>
+                        <a th:replace="partes/pagina_inicio :: principal-btn-registro"></a>
+                    </div>
+                </div>
+                <div class="flecha-bajar text-center">
+                    <a href="#servicios"><i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                </div>
+            </section>
+        </div>
+        <main id="servicios">
+            <div class="container">
+                <div class="titulo text-center">
+                    <h2 th:text="${empresa.tituloServicio}">Titulo Servicios</h2>
+                </div>
+                <div class="row">
+                    <div class="texto-servicios col-sm-12" th:text="${empresa.detalleServicio}">Servicios</div>
+                </div>
+                <div class="owl-carousel owl-theme">
+                    <div><img th:src="@{/images/sistem/slide/dafault-sistem1.jpg}"/></div>
+                    <div><img th:src="@{/images/sistem/slide/dafault-sistem2.jpg}"/></div>
+                    <div><img th:src="@{/images/sistem/slide/dafault-sistem3.jpg}"/></div>
+                    <div><img th:src="@{/images/sistem/slide/dafault-sistem4.jpg}"/></div>
+                    <div><img th:src="@{/images/sistem/slide/dafault-sistem5.jpg}"/></div>
+                    <div><img th:src="@{/images/sistem/slide/dafault-sistem6.jpg}"/></div>
+                </div>
+            </div>
+        </main>
+        <section id="contacto">
+            <div class="container">
+                <div class="titulo text-center">
+                    <h2 th:text="${empresa.tituloContacto}">Contacto</h2>
+                </div>
+                <div class="row">
+                    <div class="texto-contacto col-12 col-md-6 col-lg-6">
+                        <div class="fila-contacto row">
+                            <h5 class="col-4 col-sm-2 col-md-3">Telefono:</h5>
+                            <span class="col-8 col-sm-4 col-md-3" th:text="${empresa.telefono}">2000000</span>
+                            <h5 class="col-4 col-sm-2 col-md-3">Celular:</h5>
+                            <span class="col-8 col-sm-4 col-md-3" th:text="${empresa.celular}">0900000000</span>
+                        </div>
+                        <div class="fila-contacto row">
+                            <h5 class="col-4 col-sm-2 col-md-3">País:</h5>
+                            <span class="col-8 col-sm-4 col-md-3 text-capitalize" th:text="${empresa.pais}">Pais</span>
+                            <h5 class="col-4 col-sm-2 col-md-3">Ciudad:</h5>
+                            <span class="col-8 col-sm-4 col-md-3 text-capitalize" th:text="${empresa.ciudad}">Ciudad</span>
+                        </div>
+                        <div class="fila-contacto row">
+                            <h5 class="col-4 col-sm-2 col-md-3">Email:</h5>
+                            <span class="col-8 col-sm-10 col-md-9" th:text="${empresa.email}">Email</span>
+                        </div>
+                        <div class="fila-contacto row">
+                            <h5 class="col-4 col-sm-2 col-md-3">Dirección:</h5>
+                            <span class="col-8 col-sm-10 col-md-9" th:text="${empresa.direccion}">Dirección</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 hidden-md-down"></div>
+                    <div class="col-12 col-md-6 col-lg-5">
+                        <form action="#">
+                            <div class="form-group row">
+                                <label for="nombre" class="col-md-2 col-form-label hidden-xs-down">Nombre:</label>
+                                <div class="col-md-10">
+                                    <input class="form-control" type="text" id="nombre" name="nombre" placeholder="Ingrese su nombre" data-toggle="tooltip" data-placement="top" title="Ingrese su nombre completo"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="email" class="col-md-2 col-form-label hidden-xs-down">Email:</label>
+
+                                <div class="col-md-10">
+                                    <input class="form-control" type="text" id="email" name="email" placeholder="Ingrese su email" data-toggle="tooltip" data-placement="top" title="Ingrese su email"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="mensaje" class="col-md-2 col-form-label hidden-xs-down">Mensaje:</label>
+                                <div class="col-md-10">
+                                    <textarea class="form-control" rows="4" id="mensaje" name="mensaje" placeholder="Ingrese su mensaje" data-toggle="tooltip" data-placement="top" title="Ingrese un mensaje"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12 text-right">
+                                    <button type="reset" class="btn btn-secondary">Limpiar</button>
+                                    <button type="submit" class="btn boton-principal">Enviar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="mapa-frame">
+                <iframe src="" width="400" height="300" frameborder="0" style="border:0" allowfullscreen="" th:src="${empresa.mapa}"></iframe>
+            </div>
+        </section>
+        <footer th:replace="partes/pagina_inicio :: footer"></footer>
+
+        <script th:replace="partes/script :: jquery"></script>
+        <script th:replace="partes/script :: bootstrap"></script>
+        <script th:replace="partes/script :: carousel"></script>
+        <script th:replace="partes/script :: index-script"></script>
+    </body>
+</html>

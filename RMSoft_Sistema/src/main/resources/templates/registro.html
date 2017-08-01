@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head th:replace="partes/pagina_inicio :: head"></head>
+<body>
+	<div class="background">
+		<section class="container-login">
+			<header class="navbar-inicio">
+				<nav class="navbar fixed-top navbar-toggleable-sm fixed">
+					<div class="container">
+						<a th:replace="partes/pagina_inicio :: navbar-link-index"></a>
+					</div>
+				</nav>
+			</header>
+			<div class="principal">
+				<div class="container">
+					<div class="row justify-content-center">
+						<div class="panel col-12 col-lg-11 col-xl-10">
+							<div class="cuerpo">
+								<div class="logo hidden-sm-down">
+									<a th:replace="partes/pagina_inicio :: panel-img-logo"></a>
+								</div>
+								<div class="contenido">
+									<div th:replace="partes/pagina_inicio :: panel-div-opciones"></div>
+                                                                        <div class="alertas">
+                                                                            <div class="alert alert-danger fade show" role="alert" th:if="${error == 1}">
+                                                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                                <strong>ERROR: </strong>Los datos que desea ingresar estan incorrecotos, los campos con * son obligatorios.
+                                                                            </div>
+                                                                            <div class="alert alert-danger fade show" role="alert" th:if="${error == 2}">
+                                                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                                <strong>ERROR: </strong>Las contraseñas no coinciden.
+                                                                            </div>
+                                                                            <div class="alert alert-danger fade show" role="alert" th:if="${error == 3}">
+                                                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                                <strong>ERROR: </strong>El email que desea ingresar ya esta registrado por otro usuario.
+                                                                            </div>
+                                                                        </div>
+                                                                        <form class="registro" th:action="@{/registro/crearusuario}" th:object="${usuarioModel}" method="POST">
+                                                                            <div class="form-group row justify-content-center">
+                                                                                <label for="datos" class="col-sm-4 col-lg-3 hidden-xs-down col-form-label">Ingrese sus Datos:</label>
+                                                                                <div class="col-6 col-sm-4 col-lg-4" th:classappend="${#fields.hasErrors('nombre')} ? has-danger">
+                                                                                    <input type="text" class="form-control" placeholder="Nombre *" th:field="*{nombre}"/>
+                                                                                </div>
+                                                                                <div class="col-6 col-sm-4 col-lg-4" th:classappend="${#fields.hasErrors('apellido')} ? has-danger">
+                                                                                    <input type="text" class="form-control" placeholder="Apellido *" th:field="*{apellido}"/>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group row justify-content-center">
+                                                                                <label for="email" class="col-sm-4 col-lg-3 hidden-xs-down col-form-label">Ingrese su Email:</label>
+                                                                                <div class="col-12 col-sm-8 col-lg-8" th:classappend="${#fields.hasErrors('usuario')} ? has-danger">
+                                                                                    <input type="email" class="form-control" placeholder="Ingrese su Email *" th:field="*{usuario}"/>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group row justify-content-center">
+                                                                                <label for="password" class="col-sm-4 col-lg-3 hidden-xs-down col-form-label">Crear una Clave:</label>
+                                                                                <div class="col-6 col-sm-4 col-lg-4">
+                                                                                    <input type="password" class="form-control" placeholder="Contraseña *" th:field="*{password}"/>
+                                                                                </div>
+                                                                                <div class="col-6 col-sm-4 col-lg-4">
+                                                                                    <input type="password" class="form-control" placeholder="Confirmar *" th:field="*{passwordConfirm}"/>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group row justify-content-center">
+                                                                                <div class="col-12 col-lg-11">
+                                                                                    <button type="submit" class="btn btn-block boton-principal"><i class="fa fa-external-link" aria-hidden="true"></i> Registrarme</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	<footer th:replace="partes/pagina_inicio :: footer"></footer>
+    
+        <script th:replace="partes/script :: jquery"></script>
+        <script th:replace="partes/script :: bootstrap"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head th:replace="partes/pagina_sistema :: head"></head>
+<body>
+    <div class="container-sistema">
+        <div th:replace="partes/pagina_sistema :: sidebar"></div>
+        <div class="principal">
+            <nav th:replace="partes/pagina_sistema :: navbar"></nav>
+            <div class="contenido orden container-fluid">
+                <div class="alertas">
+                    <div class="alert alert-danger fade show" role="alert" th:if="${error == 1}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>ERROR: </strong>Los datos que desea ingresar estan incorrecotos.
+                    </div>
+                    <div class="alert alert-danger fade show" role="alert" th:if="${error == 2}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>ERROR: </strong>La contraseña ingresada no coincide con su contrasña actual.
+                    </div>
+                    <div class="alert alert-danger fade show" role="alert" th:if="${error == 3}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>ERROR: </strong>El email que desea ingresar ya esta registrado por otro usuario.
+                    </div>
+                    <div class="alert alert-danger fade show" role="alert" th:if="${error == 4}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>ERROR: </strong>No se pudo guardar la imagen selccionada.
+                    </div>
+                    <div class="alert alert-info fade show" role="alert" th:if="${editado}">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>INFO: </strong>Sus datos se han actualizado correctamente, epera mientras se actualizan.
+                    </div>
+                </div>
+                <div class="panel reservaciones">
+                    <form enctype="multipart/form-data" th:action="@{/cuenta/editarmiusuario}" th:object="${usuarioModel}" method="POST">
+                        <input type="hidden" th:field="*{habilitado}"/>
+                        <input type="hidden" th:field="*{rol}"/>
+                        <input type="hidden" th:field="*{imagen}"/>
+                        <div class="titulo">
+                            <h3>Cuenta</h3>
+                            <div class="opciones">
+                                <a class="btn btn-primary" href="#" role="button" th:href="@{/cuenta/editar}" th:if="${accion == 0}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i><span class="hidden-xs-down"> Editar</span></a>
+                                <button type="submit" class="btn btn-success" th:if="${accion == 1}"><i class="fa fa-floppy-o" aria-hidden="true"></i><span class="hidden-xs-down"> Guardar</span></button>
+                                <a class="btn btn-danger" href="#" role="button" th:href="@{/cuenta/cancelar}" th:if="${accion == 1}"><i class="fa fa-times" aria-hidden="true"></i><span class="hidden-xs-down"> Cancelar</span></a>
+                            </div>
+                        </div>
+                        <div class="cuerpo">
+                            <div class="datos-usuario row">
+                                <div class="col-12 col-md-12 col-lg-7 col-xl-8">
+                                    <div class="form-group row estatico">
+                                        <label for="nombre" class="col-6 col-sm-3"><h5>Tipo:</h5></label>
+                                        <div class="col-6 col-sm-3">
+                                            <span th:text="${usuarioModel.rol}"></span>
+                                        </div>
+                                        <label for="apellido" class="col-6 col-sm-3"><h5>Estado:</h5></label>
+                                        <div class="col-6 col-sm-3">
+                                            <span>activo</span>
+                                        </div> 
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="nombre" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Nombre:</label>
+                                        <div class="col-6 col-md-3 col-xl-4" th:classappend="${#fields.hasErrors('nombre')} ? has-danger">
+                                            <input type="text" class="form-control text-capitalize" readonly="" th:if="${accion == 0}" th:field="*{nombre}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 1}" th:field="*{nombre}"/>
+                                        </div>
+                                        <label for="apellido" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Apellido:</label>
+                                        <div class="col-6 col-md-3 col-xl-4" th:classappend="${#fields.hasErrors('apellido')} ? has-danger">
+                                            <input type="text" class="form-control text-capitalize" readonly="" th:if="${accion == 0}" th:field="*{apellido}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 1}" th:field="*{apellido}"/>
+                                        </div> 
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="descripcion" class="col-12 col-md-3 col-xl-2 col-form-label">Dcumento:</label>
+                                        <div class="col-6 col-md-3 col-xl-4">
+                                            <input type="text" class="form-control" name="capacidad" readonly="" th:if="${accion == 0}" th:field="*{tipoDocumento}"/>
+                                            <select class="form-control" th:if="${accion == 1}" th:field="*{tipoDocumento}" th:remove="all-but-first">
+                                                <option th:each="td : ${tpDocumento}" th:value="${td.nombre}" th:text="${td.nombre}">Documento</option>
+                                            </select>
+                                        </div>
+                                        <label for="numero" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Número:</label>
+                                        <div class="col-6 col-md-3 col-xl-4" th:classappend="${#fields.hasErrors('numDocumento')} ? has-danger">
+                                            <input type="text" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{numDocumento}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 1}" th:field="*{numDocumento}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="email" class="col-12 col-md-3 col-xl-2 col-form-label hidden-sm-down">Email:</label>
+                                        <div class="col-12 col-md-9 col-xl-10" th:classappend="${#fields.hasErrors('usuario')} ? has-danger">
+                                            <input type="email" class="form-control" readonly="" th:if="${accion == 0}" th:field="*{usuario}"/>
+                                            <input type="email" class="form-control" th:if="${accion == 1}" th:field="*{usuario}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="direccion" class="col-12 col-md-3 col-xl-2 col-form-label hidden-sm-down">Dirección:</label>
+                                        <div class="col-12 col-md-9 col-xl-10" th:classappend="${#fields.hasErrors('direccion')} ? has-danger">
+                                            <input type="text" class="form-control" readonly="" th:if="${accion == 0}"  th:field="*{direccion}"/>
+                                            <input type="text" class="form-control" th:if="${accion == 1}"  th:field="*{direccion}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row hidden-lg-up">
+                                        <div class="col-12">
+                                            <a href="../static/images/default-user.jpg" class="link-ver-img btn btn-secondary btn-block" data-fancybox="" th:href="@{${'/images/sistem/users/' + usuarioModel.imagen}}">
+                                                Ver Imagen <i class="fa fa-picture-o" aria-hidden="true"></i>
+                                            </a>
+                                            <div class="input-subir-imagen" th:if="${accion == 1}">
+                                                <input type="file" id="imgInp2" name="file2" class="form-control-file"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div th:if="${accion == 1}">
+                                       <div class="collapse" id="input-clave">
+                                            <div class="form-group row">
+                                                <label for="nombre" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Anterior:</label>
+                                                <div class="col-6 col-md-3 col-xl-4">
+                                                    <input type="password" class="form-control" name="numero" placeholder="Anterior" th:field="*{passwordConfirm}"/>
+                                                </div>
+                                                <label for="apellido" class="col-md-3 col-xl-2 col-form-label hidden-sm-down">Nueva:</label>
+                                                <div class="col-6 col-md-3 col-xl-4">
+                                                    <input type="password" class="form-control" name="capacidad" placeholder="Nueva" th:field="*{password}"/>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn boton-principal btn-block" data-toggle="collapse" data-target="#input-clave" aria-expanded="false">
+                                                Cambiar Mi Clave
+                                            </button>
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div class="imagen-persona col-12 col-lg-5 col-xl-4 hidden-md-down">
+                                    <a href="../static/images/default-user.jpg" class="link-ver-img" data-fancybox="" th:href="@{${'/images/sistem/users/' + usuarioModel.imagen}}">
+                                        <img src="../static/images/default-user.jpg" class="img-fluid img-thumbnail" id="mostrador" alt="usuario" th:src="@{${'/images/sistem/users/' + usuarioModel.imagen}}"/>
+                                    </a>
+                                    <div class="input-subir-imagen" th:if="${accion == 1}">
+                                        <input type="file" id="imgInp1" name="file1" class="form-control-file"/>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </form>
+                </div>
+            </div><!-- Fin .contenido -->
+        </div>
+    </div><!-- Fin .container-sistema -->
+
+    <!-- jQuery first, then Bootstrap JS. -->
+    <script th:replace="partes/script :: jquery"></script>
+    <script th:replace="partes/script :: bootstrap"></script>
+    <script th:replace="partes/script :: fancybox"></script>
+    <script th:replace="partes/script :: cerrar-alerts"></script>
+    <script th:replace="partes/script :: input-image"></script>
+    <script th:if="${editado}">
+        setTimeout(function(){
+            window.location.reload();
+        }, 1500);
+    </script>
+</body>
+</html>

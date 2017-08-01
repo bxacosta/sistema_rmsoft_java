@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head></head>
+<body>
+	<!-- jQuery first, then Bootstrap JS. -->
+        <script src="../static/js/jquery.js" th:src="@{/js/jquery.js}" th:fragment="jquery"></script>
+        <script src="../static/js/bootstrap.js" th:src="@{/js/bootstrap.min.js}" th:fragment="bootstrap"></script>
+        <script src="../static/js/owl.carousel.min.js" th:src="@{/js/owl.carousel.min.js}" th:fragment="carousel"></script>
+        <script src="../static/js/owl.carousel.min.js" th:src="@{/js/jquery.fancybox.min.js}" th:fragment="fancybox"></script>
+        <script src="../static/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js}" th:fragment="datatables"></script>
+        <script src="../static/js/dataTables.bootstrap4.min.js" th:src="@{/js/dataTables.bootstrap4.min.js}" th:fragment="datatablesbs4"></script>
+        
+        <script type="text/javascript" th:fragment="cerrar-alerts">
+            $(document).ready(function () {
+                window.setTimeout(function() {
+                    $(".alert").fadeTo(100, 0).slideUp(500, function(){
+                        $(this).remove(); 
+                    });
+                },4000);
+            });
+        </script>
+        
+        <script type="text/javascript" th:fragment="index-script">
+            $(document).ready(function(){
+                $(".owl-carousel").owlCarousel({
+                    loop:true,
+                    margin:4,
+                    responsiveClass:true,
+                    responsive:{
+                        0:{
+                            items:1,
+                        },
+                        600: {
+                            items: 2,
+                        },
+                        1000: {
+                            items: 3,
+                        }
+                    }
+                });
+                $('#mapa-frame').click(function () {
+                    $(this).find('iframe').addClass('click')
+                }).mouseleave(function () {
+                    $(this).find('iframe').removeClass('click')
+                });
+            });
+        </script>
+        
+        <script type="text/javascript" th:fragment="principal-script">
+            $(document).ready(function () {
+                $('.table').DataTable({
+                    "scrollX": true,
+                    "language": {
+                        "search": "Buscar:",
+                        "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+                        "zeroRecords": "No se encontraron datos para mostrar.",
+                        "info": "Mostrando pagina _PAGE_ de _PAGES_",
+                        "infoEmpty": "",
+                        "paginate": {
+                            "first": "Primero",
+                            "last": "Ultimo",
+                            "next": "Siguiente",
+                            "previous": "Anterior"
+                        }
+                    }
+                });
+            });
+            $('.modal').on('shown.bs.modal', function (e) {
+                $('.table').DataTable().draw();
+            });
+        </script>
+        
+        <script type="text/javascript" th:fragment="init-datatable">
+            $(document).ready(function () {
+                $('.table').DataTable({
+                    "scrollX": true,
+                    "language": {
+                        "search": "Buscar:",
+                        "lengthMenu": "Mostrar _MENU_ resultados por pagina",
+                        "zeroRecords": "No se encontraron datos para mostrar.",
+                        "info": "Mostrando pagina _PAGE_ de _PAGES_",
+                        "infoEmpty": "",
+                        "paginate": {
+                            "first": "Primero",
+                            "last": "Ultimo",
+                            "next": "Siguiente",
+                            "previous": "Anterior"
+                        }
+                    },
+                });
+            });
+        </script>
+        
+        <script type="text/javascript" th:fragment="input-image">
+            function readURL(input) {
+                /*<![CDATA[*/
+                if ((input.files) && (input.files[0])) {
+                    var reader1 = new FileReader();
+                    var reader2 = new FileReader();
+
+                    reader1.onload = function (e) {
+                        $('#mostrador').attr('src', e.target.result);
+                    }
+                    reader2.onload = function (e) {
+                        $('.link-ver-img').attr('href', e.target.result);
+                    }
+
+                    reader1.readAsDataURL(input.files[0]);
+                    reader2.readAsDataURL(input.files[0]);
+                }/*]]>*/
+            }
+
+            $("#imgInp1").change(function(){
+                readURL(this);
+            });
+
+            $("#imgInp2").change(function(){
+                readURL(this);
+            });
+        </script>
+    </body>
+</html>
